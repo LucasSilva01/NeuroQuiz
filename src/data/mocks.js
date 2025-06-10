@@ -1,5 +1,3 @@
-// src/data/mocks.js
-
 export const mockQuizzes = [
   {
     id: 'q1',
@@ -29,15 +27,6 @@ export const mockQuizzes = [
     id: 'q2',
     title: 'Redes e Internet',
     questions: [
-      {
-        id: 'q2p1',
-        text: 'O que significa a sigla "IP" em Endereço IP?',
-        answers: [
-          { id: 'q2p1a1', text: 'Posicionamento Interno', isCorrect: false },
-          { id: 'q2p1a2', text: 'Protocolo de Internet', isCorrect: true },
-          { id: 'q2p1a3', text: 'Ponto de Instalação', isCorrect: false },
-        ],
-      },
        {
         id: 'q2p2',
         text: 'Qual dispositivo conecta sua rede local à Internet?',
@@ -53,7 +42,10 @@ export const mockQuizzes = [
 
 export let mockHistory = [];
 
-
 export const addHistoryItem = (newItem) => {
   mockHistory.unshift(newItem);
+};
+
+export const deleteHistoryItem = (idToDelete) => {
+  mockHistory = mockHistory.filter(item => item.id !== idToDelete);
 };
