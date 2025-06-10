@@ -1,12 +1,13 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, ScrollView, View } from 'react-native';
+import { Text, StyleSheet, ScrollView, View } from 'react-native';
+import ScreenBackground from '../components/ScreenBackground';
 
 function AboutScreen() {
   return (
-    <SafeAreaView style={styles.safeContainer}>
+    <ScreenBackground>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Sobre o NeuroQuiz</Text>
-
+        
         <Text style={styles.paragraph}>
           O NeuroQuiz é um projeto desenvolvido para a disciplina de Programação para Dispositivos Móveis.
         </Text>
@@ -25,47 +26,54 @@ function AboutScreen() {
           <Text style={styles.footerText}>Junho de 2025</Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </ScreenBackground>
   );
 }
 
+
 const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
   scrollContainer: {
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 25,
   },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 25,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
+    color: '#FFFFFF',
   },
   paragraph: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: 17,
+    lineHeight: 25,
     textAlign: 'justify',
     marginBottom: 15,
+    color: '#f0f0f0',
   },
   listItem: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: 17,
+    lineHeight: 25,
+    color: '#f0f0f0',
+    marginLeft: 10,
   },
   footer: {
     marginTop: 40,
+    paddingBottom: 20,
     alignItems: 'center',
   },
   footerText: {
     fontSize: 14,
-    color: '#888',
+    color: '#ccc',
   }
 });
 
