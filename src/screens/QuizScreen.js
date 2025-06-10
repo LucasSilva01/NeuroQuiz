@@ -7,10 +7,10 @@ function QuizScreen({ route, navigation }) {
   const { quizId } = route.params;
   const quizData = mockQuizzes.find(q => q.id === quizId);
 
- 
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null); 
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false); 
 
   const currentQuestion = quizData.questions[currentQuestionIndex];
@@ -29,7 +29,6 @@ function QuizScreen({ route, navigation }) {
   const handleNext = () => {
     if (currentQuestionIndex < quizData.questions.length - 1) {
       setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-
       setSelectedAnswer(null);
       setIsAnswered(false);
     } else {
@@ -37,6 +36,8 @@ function QuizScreen({ route, navigation }) {
       navigation.navigate('QuizResult', {
         score: score,
         totalQuestions: quizData.questions.length,
+
+        quizTitle: quizData.title,
       });
     }
   };

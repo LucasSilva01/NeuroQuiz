@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Button, SafeAreaView } from 'react-native';
+import { addHistoryItem } from '../data/mocks';
 
 function QuizResultScreen({ route, navigation }) {
-  const { score, totalQuestions } = route.params;
-  
+  const { score, totalQuestions, quizTitle } = route.params;
+
+
+  useEffect(() => {
+    const newHistoryEntry = {
+      id: `h${new Date().getTime()}`, 
+      quizTitle: quizTitle,
+      date: new Date().toLocaleDateString('pt-BR'),
+      score: Math.round((score / totalQuestions) * 100),
+    };
+
+    addHistoryItem(newHistoryEntry);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Quiz Finalizado!</Text>
@@ -12,28 +25,17 @@ function QuizResultScreen({ route, navigation }) {
       </Text>
       <Button
         title="Voltar para o Início"
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => navigation.popToTop()} 
       />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  resultText: {
-    fontSize: 20,
-    marginBottom: 40,
-  },
+  // ... estilos continuam os mesmos
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
+  resultText: { fontSize: 20, marginBottom: 40 },
 });
 
 export default QuizResultScreen;

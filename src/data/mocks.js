@@ -1,3 +1,5 @@
+// src/data/mocks.js
+
 export const mockQuizzes = [
   {
     id: 'q1',
@@ -49,17 +51,9 @@ export const mockQuizzes = [
   },
 ];
 
-export const mockHistory = [
-  {
-    id: 'h1',
-    quizTitle: 'Hardware Básico',
-    date: '09/06/2025',
-    score: 50,
-  },
-  {
-    id: 'h2',
-    quizTitle: 'Redes e Internet',
-    date: '08/06/2025',
-    score: 100,
-  },
-];
+export let mockHistory = [];
+
+
+export const addHistoryItem = (newItem) => {
+  mockHistory.unshift(newItem);
+};
