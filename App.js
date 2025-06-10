@@ -8,7 +8,7 @@ import QuizScreen from './src/screens/QuizScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
 import HistoryDetailScreen from './src/screens/HistoryDetailScreen';
 import QuizResultScreen from './src/screens/QuizResultScreen';
-import AboutScreen from './src/screens/AboutScreen'; // 1. Importamos a nova tela
+import AboutScreen from './src/screens/AboutScreen';
 
 const Stack = createStackNavigator();
 
