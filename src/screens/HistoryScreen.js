@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
-import { mockHistory } from '../../data/mocks';
+import { mockHistory } from '../data/mocks';
 
 const HistoryItem = ({ title, date, score }) => (
   <View style={styles.itemContainer}>

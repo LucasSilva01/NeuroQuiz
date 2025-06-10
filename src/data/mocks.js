@@ -1,5 +1,3 @@
-// src/data/mocks.js
-
 export const mockQuizzes = [
   {
     id: 'q1',
