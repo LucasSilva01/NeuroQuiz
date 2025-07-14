@@ -1,75 +1,89 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+// src/screens/HomeScreen.js
+
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback, Alert, ActivityIndicator } from 'react-native';
+import ScreenBackground from '../components/ScreenBackground';
+import CustomButton from '../components/CustomButton';
+import { generateQuizFromText } from '../services/openai';
 
 function HomeScreen({ navigation }) {
-  function handleStartQuiz() {
-    navigation.navigate('Quiz', { quizId: 'q1' });
-  }
+  const [inputText, setInputText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  function handleGoToHistory() {
-    navigation.navigate('History');
-  }
-  function handleGoToAbout() {
-    navigation.navigate('About');
-  }
+  const handleGenerateQuiz = async () => {
+    if (inputText.trim().length < 50) {
+      Alert.alert("Texto muito curto", "Por favor, insira um texto com pelo menos 50 caracteres para gerar um quiz.");
+      return;
+    }
+
+    Keyboard.dismiss(); 
+    setIsLoading(true); 
+
+    try {
+      const quizData = await generateQuizFromText(inputText);
+
+      navigation.navigate('Quiz', { quizData: quizData });
+
+    } catch (error) {
+      console.error("Erro ao gerar o quiz:", error);
+      Alert.alert("Erro", "Não foi possível gerar o quiz. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <ImageBackground
-      source={require('../assets/logo.png')}
-      resizeMode="cover"
-      style={styles.container}
-    >
-      <View style={styles.overlay}>
-        <Text style={styles.title}>Bem-vindo ao NeuroQuiz!</Text>
+    <ScreenBackground>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Insira o texto para o seu quiz</Text>
 
-        <TouchableOpacity style={styles.customButton} onPress={handleStartQuiz}>
-          <Text style={styles.customButtonText}>Iniciar Quiz de Informática</Text>
-        </TouchableOpacity>
+          <TextInput
+            style={styles.textInput}
+            multiline
+            placeholder="Cole seu texto de estudo aqui..."
+            placeholderTextColor="#999"
+            value={inputText}
+            onChangeText={setInputText}
+          />
 
-        <TouchableOpacity style={styles.customButton} onPress={handleGoToHistory}>
-          <Text style={styles.customButtonText}>Ver Histórico</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.customButton} onPress={handleGoToAbout}>
-          <Text style={styles.customButtonText}>Sobre</Text>
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#FFFFFF" style={{ height: 50 }} />
+          ) : (
+            <CustomButton
+              title="Gerar Quiz com IA"
+              onPress={handleGenerateQuiz}
+              style={{height: 50}} 
+            />
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1 },
-    overlay: {
-        flex: 1,
-        width: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
-        textAlign: 'center',
-        marginBottom: 295, 
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10
-    },
-    customButton: {
-        backgroundColor: '#007bff', 
-        borderRadius: 8,
-        width: '80%', 
-        alignItems: 'center', 
-        paddingVertical: 13,
-        marginVertical: 10,
-    },
-    customButtonText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
+  container: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginBottom: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10
+  },
+  textInput: {
+    height: 200, 
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    fontSize: 16,
+    textAlignVertical: 'top',
+  },
 });
 
 export default HomeScreen;
