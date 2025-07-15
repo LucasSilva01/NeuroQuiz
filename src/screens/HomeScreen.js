@@ -1,10 +1,8 @@
-// src/screens/HomeScreen.js
-
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback, Alert, ActivityIndicator } from 'react-native';
 import ScreenBackground from '../components/ScreenBackground';
 import CustomButton from '../components/CustomButton';
-import { generateQuizFromText } from '../services/openai';
+import { generateQuizFromText } from '../services/aiService';
 
 function HomeScreen({ navigation }) {
   const [inputText, setInputText] = useState('');
