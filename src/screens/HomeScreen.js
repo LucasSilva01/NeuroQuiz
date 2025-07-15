@@ -1,87 +1,59 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback, Alert, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import ScreenBackground from '../components/ScreenBackground';
 import CustomButton from '../components/CustomButton';
-import { generateQuizFromText } from '../services/aiService';
 
 function HomeScreen({ navigation }) {
-  const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleGenerateQuiz = async () => {
-    if (inputText.trim().length < 50) {
-      Alert.alert("Texto muito curto", "Por favor, insira um texto com pelo menos 50 caracteres para gerar um quiz.");
-      return;
-    }
-
-    Keyboard.dismiss(); 
-    setIsLoading(true); 
-
-    try {
-      const quizData = await generateQuizFromText(inputText);
-
-      navigation.navigate('Quiz', { quizData: quizData });
-
-    } catch (error) {
-      console.error("Erro ao gerar o quiz:", error);
-      Alert.alert("Erro", "Não foi possível gerar o quiz. Tente novamente.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <ScreenBackground>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Insira o texto para o seu quiz</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>NeuroQuiz</Text>
+        <Text style={styles.subtitle}>Seu Assistente de Estudos com IA</Text>
 
-          <TextInput
-            style={styles.textInput}
-            multiline
-            placeholder="Cole seu texto de estudo aqui..."
-            placeholderTextColor="#999"
-            value={inputText}
-            onChangeText={setInputText}
-          />
-
-          {isLoading ? (
-            <ActivityIndicator size="large" color="#FFFFFF" style={{ height: 50 }} />
-          ) : (
+        <View style={styles.buttonMenu}>
             <CustomButton
-              title="Gerar Quiz com IA"
-              onPress={handleGenerateQuiz}
-              style={{height: 50}} 
+              title="Gerar Novo Quiz"
+              onPress={() => navigation.navigate('Generate')}
             />
-          )}
+            <CustomButton
+              title="Ver Histórico"
+              onPress={() => navigation.navigate('History')}
+            />
+            <CustomButton
+              title="Sobre"
+              onPress={() => navigation.navigate('About')}
+            />
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
   title: {
-    fontSize: 24,
+    fontSize: 48, // Título maior
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: 20,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: {width: -1, height: 1},
     textShadowRadius: 10
   },
-  textInput: {
-    height: 200, 
-    width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 20,
-    fontSize: 16,
-    textAlignVertical: 'top',
+  subtitle: {
+    fontSize: 18,
+    color: '#f0f0f0',
+    marginBottom: 60, // Espaço maior para os botões
   },
+  buttonMenu: {
+    width: '100%',
+    alignItems: 'center',
+  }
 });
 
 export default HomeScreen;

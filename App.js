@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,6 +8,7 @@ import HistoryScreen from './src/screens/HistoryScreen';
 import HistoryDetailScreen from './src/screens/HistoryDetailScreen';
 import QuizResultScreen from './src/screens/QuizResultScreen';
 import AboutScreen from './src/screens/AboutScreen';
+import GenerateScreen from './src/screens/GenerateScreen';
 
 const Stack = createStackNavigator();
 
@@ -16,7 +16,8 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerTitle: () => <HeaderTitle title="NeuroQuiz" />, headerTitleAlign: 'center' }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Generate" component={GenerateScreen} options={{ title: 'Gerar Quiz', headerTitleAlign: 'center' }} />
         <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: 'Quiz em Andamento', headerTitleAlign: 'center' }} />
         <Stack.Screen name="History" component={HistoryScreen} options={{ title: 'Histórico de Quizzes', headerTitleAlign: 'center' }} />
         <Stack.Screen name="HistoryDetail" component={HistoryDetailScreen} options={{ title: 'Detalhes do Quiz', headerTitleAlign: 'center' }} />
@@ -26,6 +27,5 @@ function App() {
     </NavigationContainer>
   );
 }
-import HeaderTitle from './src/components/HeaderTitle';
 
 export default App;

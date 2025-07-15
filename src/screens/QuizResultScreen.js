@@ -2,38 +2,46 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { addHistoryItem } from '../data/mocks';
 import CustomButton from '../components/CustomButton';
+import ScreenBackground from '../components/ScreenBackground';
 
 function QuizResultScreen({ route, navigation }) {
-  const { score, totalQuestions, quizTitle } = route.params;
+  const { score, quizData, userAnswers } = route.params;
 
   useEffect(() => {
     const newHistoryEntry = {
       id: `h${new Date().getTime()}`,
-      quizTitle: quizTitle,
+      quiz: {
+        id: quizData.id,
+        title: quizData.title,
+        questions: quizData.questions,
+      },
+      userAnswers: userAnswers,
       date: new Date().toLocaleDateString('pt-BR'),
-      score: Math.round((score / totalQuestions) * 100),
+      score: Math.round((score / quizData.questions.length) * 100),
     };
     addHistoryItem(newHistoryEntry);
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Quiz Finalizado!</Text>
-      <Text style={styles.resultText}>
-        Você acertou {score} de {totalQuestions} perguntas!
-      </Text>
-      <CustomButton
-        title="Voltar para o Início"
-        onPress={() => navigation.popToTop()}
-      />
-    </SafeAreaView>
+    <ScreenBackground>
+        <View style={styles.container}>
+            <Text style={styles.title}>Quiz Finalizado!</Text>
+            <Text style={styles.resultText}>
+                Você acertou {score} de {quizData.questions.length} perguntas!
+            </Text>
+            <CustomButton
+                title="Voltar para o Início"
+                onPress={() => navigation.popToTop()}
+            />
+        </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' },
-  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
-  resultText: { fontSize: 20, marginBottom: 40 },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, color: '#FFF', textAlign: 'center' },
+  resultText: { fontSize: 20, marginBottom: 40, color: '#FFF', textAlign: 'center' },
 });
 
 export default QuizResultScreen;

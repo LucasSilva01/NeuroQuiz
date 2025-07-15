@@ -3,7 +3,6 @@ import { GEMINI_API_KEY } from '../../config';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
 
 const createPrompt = (text) => {
-  
   const jsonFormatExample = `
     {
       "id": "q-gemini-123",
@@ -24,7 +23,6 @@ const createPrompt = (text) => {
     }
   `;
 
-  
   return `
     Analise o seguinte texto e, com base nele, crie um quiz.
     O quiz deve ter exatamente 5 perguntas de múltipla escolha.
@@ -40,24 +38,20 @@ const createPrompt = (text) => {
 };
 
 export const generateQuizFromText = async (text) => {
-  console.log("Iniciando chamada para a API do Google Gemini (versão corrigida)...");
+  console.log("Iniciando chamada para a API do Google Gemini (versão robusta)...");
 
   try {
     const prompt = createPrompt(text);
 
     const requestBody = {
-      contents: [{
-        parts: [{
-          text: prompt
-        }]
-      }],
-      "safetySettings": [
-        { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE" },
-        { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE" },
-        { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE" },
-        { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE" }
+      contents: [{ parts: [{ text: prompt }] }],
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
       ],
-      "generationConfig": { "responseMimeType": "text/plain" }
+      generationConfig: { "responseMimeType": "text/plain" }
     };
 
     const response = await fetch(API_URL, {
@@ -70,18 +64,28 @@ export const generateQuizFromText = async (text) => {
     });
 
     const responseData = await response.json();
-    console.log("Resposta completa da API:", JSON.stringify(responseData, null, 2));
 
     if (!response.ok || !responseData.candidates) {
       throw new Error(responseData.error?.message || 'Resposta inválida da API');
     }
 
-    let content = responseData.candidates[0].content.parts[0].text;
-    content = content.replace(/```json\n/g, '').replace(/\n```/g, '').trim();
+    const rawContent = responseData.candidates[0].content.parts[0].text;
+    console.log("Resposta bruta da IA recebida:", rawContent);
 
-    console.log("Conteúdo limpo recebido:", content);
 
-    const quizData = JSON.parse(content);
+    const jsonStartIndex = rawContent.indexOf('{');
+    const jsonEndIndex = rawContent.lastIndexOf('}') + 1;
+
+    if (jsonStartIndex === -1 || jsonEndIndex === 0) {
+      throw new Error("A resposta da IA não continha um JSON válido.");
+    }
+
+
+    const jsonString = rawContent.substring(jsonStartIndex, jsonEndIndex);
+    console.log("String JSON extraída para o parse:", jsonString);
+
+
+    const quizData = JSON.parse(jsonString);
     return quizData;
 
   } catch (error) {
