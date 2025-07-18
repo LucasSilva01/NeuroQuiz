@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { setupDatabaseAsync } from './src/services/database';
 
 import HomeScreen from './src/screens/HomeScreen';
 import QuizScreen from './src/screens/QuizScreen';
@@ -14,9 +13,6 @@ import GenerateScreen from './src/screens/GenerateScreen';
 const Stack = createStackNavigator();
 
 function App() {
-  useEffect(() => {
-    setupDatabaseAsync().catch(e => console.error("Erro ao configurar o BD:", e));
-  }, []);
 
   return (
     <NavigationContainer>
