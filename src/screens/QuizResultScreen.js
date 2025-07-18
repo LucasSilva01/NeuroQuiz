@@ -1,6 +1,9 @@
+
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
-import { addHistoryItem } from '../data/mocks';
+import { View, Text, StyleSheet } from 'react-native';
+
+
+import { addHistoryItemAsync } from '../services/database';
 import CustomButton from '../components/CustomButton';
 import ScreenBackground from '../components/ScreenBackground';
 
@@ -8,19 +11,23 @@ function QuizResultScreen({ route, navigation }) {
   const { score, quizData, userAnswers } = route.params;
 
   useEffect(() => {
+    
     const newHistoryEntry = {
-      id: `h${new Date().getTime()}`,
+      id: `h${new Date().getTime()}`, 
       quiz: {
         id: quizData.id,
         title: quizData.title,
         questions: quizData.questions,
       },
       userAnswers: userAnswers,
-      date: new Date().toLocaleDateString('pt-BR'),
+      date: new Date().toISOString(), 
       score: Math.round((score / quizData.questions.length) * 100),
     };
-    addHistoryItem(newHistoryEntry);
-  }, []);
+    
+    
+    addHistoryItemAsync(newHistoryEntry)
+      .catch(e => console.error("Erro ao salvar no BD:", e));
+  }, []); 
 
   return (
     <ScreenBackground>
@@ -31,6 +38,7 @@ function QuizResultScreen({ route, navigation }) {
             </Text>
             <CustomButton
                 title="Voltar para o Início"
+                
                 onPress={() => navigation.popToTop()}
             />
         </View>
@@ -39,9 +47,25 @@ function QuizResultScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 },
-  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, color: '#FFF', textAlign: 'center' },
-  resultText: { fontSize: 20, marginBottom: 40, color: '#FFF', textAlign: 'center' },
+  container: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    padding: 16 
+  },
+  title: { 
+    fontSize: 28, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    color: '#FFF', 
+    textAlign: 'center' 
+  },
+  resultText: { 
+    fontSize: 20, 
+    marginBottom: 40, 
+    color: '#FFF', 
+    textAlign: 'center' 
+  },
 });
 
 export default QuizResultScreen;
