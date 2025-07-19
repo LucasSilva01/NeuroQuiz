@@ -1,11 +1,8 @@
-// src/services/aiService.js
 
-import { GEMINI_API_KEY } from '../config.js';
+import { GEMINI_API_KEY } from '../../config.js';
 
-// A URL para o modelo gemini-pro que vamos usar
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
 
-// A instrução que daremos à IA (prompt)
 const createPrompt = (text) => {
   const jsonFormatExample = `
     {
