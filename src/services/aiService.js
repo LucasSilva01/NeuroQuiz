@@ -1,4 +1,3 @@
-
 import { GEMINI_API_KEY } from '../../config.js';
 
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
@@ -39,17 +38,13 @@ const createPrompt = (text) => {
 };
 
 export const generateQuizFromText = async (text) => {
-  console.log("Iniciando chamada para a API do Google Gemini (versão robusta)...");
+  console.log("Iniciando chamada para a API do Google Gemini (modo de depuração)...");
 
   try {
     const prompt = createPrompt(text);
 
     const requestBody = {
-      contents: [{
-        parts: [{
-          text: prompt
-        }]
-      }],
+      contents: [{ parts: [{ text: prompt }] }],
       safetySettings: [
         { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
         { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
@@ -58,12 +53,10 @@ export const generateQuizFromText = async (text) => {
       ],
       generationConfig: { "responseMimeType": "application/json" }
     };
-
+    
     const response = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody)
     });
 
@@ -75,11 +68,17 @@ export const generateQuizFromText = async (text) => {
     }
     
     const rawContent = responseData.candidates[0].content.parts[0].text;
-    console.log("--- RESPOSTA BRUTA DA IA ---");
+    
+    console.log("--- RESPOSTA BRUTA DA IA (ANTES DE QUALQUER CORREÇÃO) ---");
     console.log(rawContent);
-    console.log("--- FIM DA RESPOSTA BRUTA ---");
+    
+    const fixedContent = rawContent.replace(/"id":\s*"a\d+":/g, match => match.replace(':', ','));
+    
+    console.log("--- TEXTO APÓS A PRIMEIRA TENTATIVA DE CORREÇÃO ---");
+    console.log(fixedContent);
+    console.log("--- FIM DOS LOGS ---");
 
-    const quizData = JSON.parse(rawContent);
+    const quizData = JSON.parse(fixedContent);
     return quizData;
 
   } catch (error) {
