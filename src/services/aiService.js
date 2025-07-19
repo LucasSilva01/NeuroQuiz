@@ -6,7 +6,7 @@ const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-
 const createPrompt = (text) => {
   const jsonFormatExample = `{"id": "q-gemini-123", "title": "Um Título Criativo Sobre o Texto", "questions": [{"id": "p1", "text": "Texto da primeira pergunta gerada?", "answers": [{"id": "a1", "text": "Texto da resposta A.", "isCorrect": false}, {"id": "a2", "text": "Texto da resposta B.", "isCorrect": true}, {"id": "a3", "text": "Texto da resposta C.", "isCorrect": false}]}]}`;
 
-  return `Analise o seguinte texto e crie um quiz com 3 perguntas de múltipla escolha. Cada pergunta deve ter 3 respostas, com apenas uma sendo a correta. Retorne sua resposta SOMENTE no formato JSON, sem nenhum texto ou formatação adicional. O JSON deve seguir esta estrutura de exemplo: ${jsonFormatExample}\n\nTexto para análise:\n"""\n${text}\n"""`;
+  return `Analise o seguinte texto e crie um quiz com 5 perguntas de múltipla escolha. Cada pergunta deve ter 5 respostas, com apenas uma sendo a correta. Retorne sua resposta SOMENTE no formato JSON, sem nenhum texto ou formatação adicional. O JSON deve seguir esta estrutura de exemplo: ${jsonFormatExample}\n\nTexto para análise:\n"""\n${text}\n"""`;
 };
 
 export const generateQuizFromText = async (text) => {
